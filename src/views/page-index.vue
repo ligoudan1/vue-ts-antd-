@@ -1,5 +1,7 @@
 <template>
-  <div>This is a home page</div>
+  <div>
+    <svg-icon icon-class="feiji"></svg-icon>
+  </div>
 </template>
 
 <script lang="ts">

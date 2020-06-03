@@ -1,42 +1,18 @@
 <template>
   <!-- 插入到全局布局组件的内容区插槽中 -->
   <global-layout>
-    <!-- 右键菜单 -->
-    <contextmenu :itemList="menuItemList" :visible.sync="menuVisible" @select="onMenuSelect" />
     <!-- 标签页tabs -->
-    <a-tabs
-      @contextmenu.native="e => onContextmenu(e)"
-      v-if="multipage"
-      :active-key="activePage"
-      style="margin-top: -8px; margin-bottom: 8px"
-      :hide-add="true"
-      type="editable-card"
-      @change="changePage"
-      @edit="editPage"
-    >
-      <a-tab-pane :id="page.fullPath" :key="page.fullPath" v-for="page in pageList">
-        <span slot="tab" :pagekey="page.fullPath">{{page.name}}</span>
-      </a-tab-pane>
-    </a-tabs>
     <router-main :pageList="pageList" />
-    <!-- <transition name="page-toggle">
-      <keep-alive v-if="multipage">
-        <router-view />
-      </keep-alive>
-      <router-view v-else />
-    </transition>-->
   </global-layout>
 </template>
 
 <script lang='ts'>
 import GlobalLayout from "./main.vue";
-import Contextmenu from "../components/context-menu.vue";
 import routerMain from "./router-main.vue";
 import { Component, Vue, Provide, Watch } from "vue-property-decorator";
 
 @Component({
   components: {
-    Contextmenu,
     GlobalLayout,
     routerMain
   }

@@ -2,6 +2,9 @@ const CopyWebpackPlugin = require("copy-webpack-plugin");
 const webpack = require("webpack");
 const path = require("path");
 
+function resolve(dir) {
+  return path.join(__dirname, dir)
+}
 // const debug = process.env.NODE_ENV !== "production";
 let cesiumSource = "./node_modules/cesium/Source";
 let cesiumWorkers = "../Build/Cesium/Workers";
@@ -14,51 +17,86 @@ module.exports = {
     port: 8099,
     hotOnly: true
   },
-  css: {
-    sourceMap: false,
-    loaderOptions: {
-      less: {
-        javascriptEnabled: true,
-      },
-    }
-  },
   configureWebpack: {
-    output: {
-      sourcePrefix: " ",
-    },
-    amd: {
-      toUrlUndefined: true,
-    },
+    // provide the app's title in webpack's name field, so that
+    // it can be accessed in index.html to inject the correct title.
+    name: 'tianyu2.0',
     resolve: {
       alias: {
-        vue$: "vue/dist/vue.esm.js",
-        "@": path.resolve("src"),
-        components: path.resolve("src/components"),
-        assets: path.resolve("src/assets"),
-        views: path.resolve("src/views"),
-        cesium: path.resolve(__dirname, cesiumSource),
-      },
-    },
-    plugins: [
-      new CopyWebpackPlugin([{
-        from: path.join(cesiumSource, cesiumWorkers),
-        to: "Workers"
-      }, ]),
-      new CopyWebpackPlugin([{
-        from: path.join(cesiumSource, "Assets"),
-        to: "Assets"
-      }, ]),
-      new CopyWebpackPlugin([{
-        from: path.join(cesiumSource, "Widgets"),
-        to: "Widgets"
-      }, ]),
-      new CopyWebpackPlugin([{
-        from: path.join(cesiumSource, "ThirdParty/Workers"),
-        to: "ThirdParty/Workers",
-      }, ]),
-      new webpack.DefinePlugin({
-        CESIUM_BASE_URL: JSON.stringify("./"),
-      }),
-    ],
+        '@': resolve('src')
+      }
+    }
+  },
+  chainWebpack(config) {
+    config.plugins.delete('preload') // TODO: need test
+    config.plugins.delete('prefetch') // TODO: need test
+
+    // set svg-sprite-loader
+    config.module
+      .rule('svg')
+      .exclude.add(resolve('src/icons'))
+      .end()
+    config.module
+      .rule('icons')
+      .test(/\.svg$/)
+      .include.add(resolve('src/icons'))
+      .end()
+      .use('svg-sprite-loader')
+      .loader('svg-sprite-loader')
+      .options({
+        symbolId: 'icon-[name]'
+      })
+      .end()
+
+    // set preserveWhitespace
+    config.module
+      .rule('vue')
+      .use('vue-loader')
+      .loader('vue-loader')
+      .tap(options => {
+        options.compilerOptions.preserveWhitespace = true
+        return options
+      })
+      .end()
+
+    config
+      .when(process.env.NODE_ENV !== 'development',
+        config => {
+          config
+            .plugin('ScriptExtHtmlWebpackPlugin')
+            .after('html')
+            .use('script-ext-html-webpack-plugin', [{
+              // `runtime` must same as runtimeChunk name. default is `runtime`
+              inline: /runtime\..*\.js$/
+            }])
+            .end()
+          config
+            .optimization.splitChunks({
+              chunks: 'all',
+              cacheGroups: {
+                libs: {
+                  name: 'chunk-libs',
+                  test: /[\\/]node_modules[\\/]/,
+                  priority: 10,
+                  chunks: 'initial' // only package third parties that are initially dependent
+                },
+                elementUI: {
+                  name: 'chunk-elementUI', // split elementUI into a single package
+                  priority: 20, // the weight needs to be larger than libs and app or it will be packaged into libs or app
+                  test: /[\\/]node_modules[\\/]_?element-ui(.*)/ // in order to adapt to cnpm
+                },
+                commons: {
+                  name: 'chunk-commons',
+                  test: resolve('src/components'), // can customize your rules
+                  minChunks: 3, //  minimum common number
+                  priority: 5,
+                  reuseExistingChunk: true
+                }
+              }
+            })
+          config.optimization.runtimeChunk('single')
+        }
+      )
   }
+
 };

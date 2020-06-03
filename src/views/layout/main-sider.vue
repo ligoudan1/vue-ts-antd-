@@ -1,16 +1,44 @@
 <template>
-  <a-layout-sider :trigger="null" collapsible v-model="collapsed">
-    <div class="logo" />
-    <a-menu theme="dark" mode="inline" :defaultSelectedKeys="['1']" :defaultOpenKeys="['2']">
-      <template v-for="item in menu">
-        <a-menu-item v-if="!item.children" :key="item.path" @click="gotoRouteHandle(item.name)">
-          <a-icon :type="item.icon" v-if="item.icon != 'none'" />
-          <span>{{ item.name }}</span>
-        </a-menu-item>
-        <sub-menu v-else :menuInfo="item" :key="item.path" />
+  <el-menu
+    default-active="2"
+    class="el-menu-vertical-demo"
+    @open="handleOpen"
+    @close="handleClose"
+    background-color="#545c64"
+    text-color="#fff"
+    active-text-color="#ffd04b"
+  >
+    <el-submenu index="1">
+      <template slot="title">
+        <i class="el-icon-location"></i>
+        <span>导航一</span>
       </template>
-    </a-menu>
-  </a-layout-sider>
+      <el-menu-item-group>
+        <template slot="title">分组一</template>
+        <el-menu-item index="1-1">选项1</el-menu-item>
+        <el-menu-item index="1-2">选项2</el-menu-item>
+      </el-menu-item-group>
+      <el-menu-item-group title="分组2">
+        <el-menu-item index="1-3">选项3</el-menu-item>
+      </el-menu-item-group>
+      <el-submenu index="1-4">
+        <template slot="title">选项4</template>
+        <el-menu-item index="1-4-1">选项1</el-menu-item>
+      </el-submenu>
+    </el-submenu>
+    <el-menu-item index="2">
+      <i class="el-icon-menu"></i>
+      <span slot="title">导航二</span>
+    </el-menu-item>
+    <el-menu-item index="3" disabled>
+      <i class="el-icon-document"></i>
+      <span slot="title">导航三</span>
+    </el-menu-item>
+    <el-menu-item index="4">
+      <i class="el-icon-setting"></i>
+      <span slot="title">导航四</span>
+    </el-menu-item>
+  </el-menu>
 </template>
 
 <script lang="ts">
@@ -26,43 +54,7 @@ interface MenuFormat {
 interface router extends Vue {
   $router: any;
 }
-const SubMenu: MenuFormat = {
-  template: `
-      <a-sub-menu :key="menuInfo.path" v-bind="$props" v-on="$listeners">
-        <span slot="title">
-          <a-icon :type="menuInfo.icon" /><span>{{ menuInfo.name }}</span>
-        </span>
-        <template v-for="item in menuInfo.children">
-          <a-menu-item v-if="!item.children" :key="item.path" @click="gotoRouteHandle(item.name)">
-            <a-icon :type="item.icon" v-if="item.icon != 'none'"/>
-            <span>{{ item.name }}</span>
-          </a-menu-item>
-          <sub-menu v-else :key="item.path" :menu-info="item" />
-        </template>
-      </a-sub-menu>
-    `,
-  name: "SubMenu",
-  // must add isSubMenu: true
-  isSubMenu: true,
-  props: {
-    ...(Menu as any).SubMenu.props,
-    // Cannot overlap with properties within Menu.SubMenu.props
-    menuInfo: {
-      type: Object,
-      default: () => ({})
-    }
-  },
-  methods: {
-    gotoRouteHandle(name: any) {
-      (this as router).$router.push({ name });
-    }
-  }
-};
-@Component({
-  components: {
-    "sub-menu": SubMenu
-  }
-})
+@Component
 export default class MainSider extends Vue {
   public menu: any[] = [];
 
@@ -76,6 +68,8 @@ export default class MainSider extends Vue {
     );
     this.menu = (this as any).$router.options.routes[index].children;
   }
+  handleOpen() {}
+  handleClose() {}
 
   // 通过menuId与动态(菜单)路由进行匹配跳转至指定路由
   gotoRouteHandle(name: any) {

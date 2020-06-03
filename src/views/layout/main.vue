@@ -1,16 +1,17 @@
 <template>
-  <a-layout id="components-layout-demo-custom-trigger">
-    <main-sider />
-    <a-layout style="background:#fff">
+  <el-container style="height:100%">
+    <el-header>
       <main-header />
-      <a-layout-content :style="{padding: '24px', background: '#fff', minHeight: '280px' }">
-        <!-- <keep-alive>
-          <router-view />
-        </keep-alive>-->
+    </el-header>
+    <el-container style="min-height:870px">
+      <el-aside width="200px" :style="{backgroundColor:'#545c64'}">
+        <main-sider />
+      </el-aside>
+      <el-main>
         <slot></slot>
-      </a-layout-content>
-    </a-layout>
-  </a-layout>
+      </el-main>
+    </el-container>
+  </el-container>
 </template>
 <script lang="ts">
 import mainSider from "./main-sider.vue";
