@@ -25,12 +25,12 @@ const routes: Array<any> = [
     children: [
       {
         path: '/demo',
-        name: '测试',
+        name: 'test1',
         component: routerMain,
         icon: 'user',
         children: [{
           path: '/demo/test',
-          name: '测试',
+          name: 'test2',
           component: () => import('@/views/demo/test.vue'),
           icon: 'none'
         }
@@ -45,9 +45,6 @@ const routes: Array<any> = [
         next({ path: '/login' })
       }
     }
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
   }
 ]
 

@@ -1,15 +1,16 @@
-const CopyWebpackPlugin = require("copy-webpack-plugin");
-const webpack = require("webpack");
 const path = require("path");
 
 function resolve(dir) {
   return path.join(__dirname, dir)
 }
 // const debug = process.env.NODE_ENV !== "production";
-let cesiumSource = "./node_modules/cesium/Source";
-let cesiumWorkers = "../Build/Cesium/Workers";
+// let cesiumSource = "./node_modules/cesium/Source";
+// let cesiumWorkers = "../Build/Cesium/Workers";
 module.exports = {
   publicPath: "./",
+  outputDir: 'dist',
+  assetsDir: 'static',
+  lintOnSave: process.env.NODE_ENV === 'development',
   // 关闭eslint
   lintOnSave: false,
   devServer: {
