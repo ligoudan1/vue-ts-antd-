@@ -1,17 +1,27 @@
 <template>
   <div class="load_wapper">
-    <el-form class="form_wapper" size="mini" :model="formModel">
+    <el-form
+      class="form_wapper"
+      size="mini"
+      :model="formModel"
+    >
       <el-form-item label="用户名:">
-        <el-input v-model="formModel.user"></el-input>
+        <el-input v-model="formModel.user" />
       </el-form-item>
       <el-form-item label="密码:">
-        <el-input v-model="formModel.password"></el-input>
+        <el-input v-model="formModel.password" />
       </el-form-item>
       <el-form-item align="center">
-        <el-button @click="loadBtn" type="primary" plain>登录</el-button>
+        <el-button
+          type="primary"
+          plain
+          @click="loadBtn"
+        >
+          登录
+        </el-button>
       </el-form-item>
       <span>管理者：admin,密码：1</span>
-      <br />
+      <br>
       <span>普通用户：user,密码：1</span>
     </el-form>
   </div>
@@ -23,33 +33,32 @@ export default {
   data() {
     return {
       formModel: {
-        user: "admin",
-        password: "1"
+        user: 'admin',
+        password: '1'
       }
-    };
+    }
   },
   methods: {
     loadBtn() {
       // 这里应该调用接口，将用户信息传给后端，后端查到用户的角色,类似于:
       // axios.post('/temp',this.formModel).then(res=>{})
       // 我暂时就不模拟了，直接取
-      if (this.formModel.user !== "admin" && this.formModel.user !== "user") {
-        alert("用户名错误!");
-        return;
+      if (this.formModel.user !== 'admin' && this.formModel.user !== 'user') {
+        alert('用户名错误!')
+        return
       }
-      if (this.formModel.password != "1") {
-        alert("密码错误!");
-        return;
+      if (this.formModel.password !== '1') {
+        alert('密码错误!')
+        return
       }
-      let getUserRole = this.formModel.user === "admin" ? "admin" : "user";
-      localStorage.setItem("userRole", getUserRole);
+      const getUserRole = this.formModel.user === 'admin' ? 'admin' : 'user'
+      localStorage.setItem('userRole', getUserRole)
       // window.location.href="/main"
-      localStorage.setItem("token", "1111");
-      this.$router.push("/");
+      localStorage.setItem('token', '1111')
+      this.$router.push('/')
     }
-  },
-  mounted() {}
-};
+  }
+}
 </script>
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>

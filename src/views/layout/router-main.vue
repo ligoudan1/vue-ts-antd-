@@ -6,8 +6,8 @@
 </template>
 
 <script lang="ts">
-import PageIndex from "../page-index.vue";
-import { Component, Vue, Prop } from "vue-property-decorator";
+import PageIndex from '../page-index.vue'
+import { Component, Vue, Prop } from 'vue-property-decorator'
 @Component({
   components: {
     PageIndex

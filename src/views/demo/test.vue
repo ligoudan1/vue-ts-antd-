@@ -1,22 +1,24 @@
 <template>
   <div>
-    <button @click="clickEvent">clickme</button>
+    <button @click="clickEvent">
+      clickme
+    </button>
   </div>
 </template>
 
-
 <script lang="ts">
-import { Component, Vue } from "vue-property-decorator";
+import { Component, Vue } from 'vue-property-decorator'
 @Component
 export default class test extends Vue {
-  public test: string = "test";
+  public test = 'test';
   created() {
-    console.log(this.test);
+    console.log(this.test)
   }
+
   public clickEvent(): void {
-    console.log("====================================");
-    console.log(this);
-    console.log("====================================");
+    console.log('====================================')
+    console.log(this)
+    console.log('====================================')
   }
 }
 </script>

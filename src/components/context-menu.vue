@@ -1,24 +1,31 @@
 <template>
   <!-- 标签栏右键菜单 -->
   <a-menu
+    v-show="visible"
     :style="style"
     class="contextmenu"
-    v-show="visible"
+    :selected-keys="selectedKeys"
     @click="handleClick"
-    :selectedKeys="selectedKeys"
   >
-    <a-menu-item :key="item.key" v-for="item in itemList">
-      <a-icon role="menuitemicon" v-if="item.icon" :type="item.icon" />
-      {{item.text}}
+    <a-menu-item
+      v-for="item in itemList"
+      :key="item.key"
+    >
+      <a-icon
+        v-if="item.icon"
+        role="menuitemicon"
+        :type="item.icon"
+      />
+      {{ item.text }}
     </a-menu-item>
   </a-menu>
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from "vue-property-decorator";
+import { Component, Prop, Vue } from 'vue-property-decorator'
 
 @Component({
-  name: "Contextmenu"
+  name: 'Contextmenu'
 })
 export default class ContextMenu extends Vue {
   @Prop({
@@ -26,46 +33,24 @@ export default class ContextMenu extends Vue {
     required: false,
     default: false
   })
-  public visible!: boolean;
+  private visible!: boolean;
 
   @Prop({
     type: Array,
     required: true
   })
-  public itemList!: Array<any>;
+  private itemList!: Array<any>;
 
-  public left: number = 0;
-  public top: number = 0;
+  public left = 0;
+  public top = 0;
   public target: any = null;
   public selectedKeys: Array<any> = [];
 
-  get style() {
+  get style():any {
     return {
-      left: this.left + "px",
-      top: this.top + "px"
-    };
-  }
-
-  created(): void {
-    window.addEventListener("mousedown", e => this.closeMenu(e));
-    window.addEventListener("contextmenu", e => this.setPosition(e));
-  }
-
-  closeMenu(e: any) {
-    if (
-      ["menuitemicon", "menuitem"].indexOf(e.target.getAttribute("role")) < 0
-    ) {
-      this.$emit("update:visible", false);
+      left: this.left + 'px',
+      top: this.top + 'px'
     }
-  }
-  setPosition(e: any) {
-    this.left = e.clientX;
-    this.top = e.clientY;
-    this.target = e.target;
-  }
-  handleClick({ key }: any) {
-    this.$emit("select", key, this.target);
-    this.$emit("update:visible", false);
   }
 }
 </script>

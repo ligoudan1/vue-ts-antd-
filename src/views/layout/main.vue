@@ -1,22 +1,25 @@
 <template>
   <el-container style="height:100%">
     <el-header>
-      <main-header />
+      <main-header :style="{}" />
     </el-header>
     <el-container style="min-height:870px">
-      <el-aside width="200px" :style="{backgroundColor:'#545c64'}">
+      <el-aside
+        width="200px"
+        :style="{backgroundColor: '#545c64'}"
+      >
         <main-sider />
       </el-aside>
       <el-main>
-        <slot></slot>
+        <slot />
       </el-main>
     </el-container>
   </el-container>
 </template>
 <script lang="ts">
-import mainSider from "./main-sider.vue";
-import mainHeader from "./main-header.vue";
-import { Component, Vue } from "vue-property-decorator";
+import mainSider from './main-sider.vue'
+import mainHeader from './main-header.vue'
+import { Component, Vue } from 'vue-property-decorator'
 @Component({
   components: {
     mainSider,

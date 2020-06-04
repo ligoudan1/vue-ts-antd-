@@ -2,14 +2,14 @@
   <!-- 插入到全局布局组件的内容区插槽中 -->
   <global-layout>
     <!-- 标签页tabs -->
-    <router-main :pageList="pageList" />
+    <router-main :page-list="pageList" />
   </global-layout>
 </template>
 
 <script lang='ts'>
-import GlobalLayout from "./main.vue";
-import routerMain from "./router-main.vue";
-import { Component, Vue, Provide, Watch } from "vue-property-decorator";
+import GlobalLayout from './main.vue'
+import routerMain from './router-main.vue'
+import { Component, Vue, Provide, Watch } from 'vue-property-decorator'
 
 @Component({
   components: {
@@ -19,80 +19,88 @@ import { Component, Vue, Provide, Watch } from "vue-property-decorator";
 })
 export default class MainTab extends Vue {
   // name: "MenuView";
-  //data
+  // data
   @Provide() pageList: Array<any> = [];
   @Provide() linkList: Array<any> = [];
-  @Provide() activePage: string = "";
-  @Provide() menuVisible: boolean = false;
+  @Provide() activePage = '';
+  @Provide() menuVisible = false;
   @Provide() menuItemList: Array<any> = [
-    { key: "1", icon: "arrow-left", text: "关闭左侧" },
-    { key: "2", icon: "arrow-right", text: "关闭右侧" },
-    { key: "3", icon: "close", text: "关闭其它" }
+    { key: '1', icon: 'arrow-left', text: '关闭左侧' },
+    { key: '2', icon: 'arrow-right', text: '关闭右侧' },
+    { key: '3', icon: 'close', text: '关闭其它' }
   ];
 
   // computed
-  get multipage() {
-    return this.$store.state.Setting.multipage;
+  get multipage(): any {
+    return this.$store.state.Setting.multipage
   }
 
-  //watch
-  @Watch("$route")
-  getRoute(newRoute: any, oldRoute: any) {
-    if (newRoute.name == "/") {
-      return;
+  // watch
+  @Watch('$route')
+  getRoute(newRoute: any):void {
+    if (newRoute.name === '/') {
+      return
     }
-    this.activePage = newRoute.fullPath;
+    this.activePage = newRoute.fullPath
     if (!this.multipage) {
-      this.linkList = [newRoute.fullPath];
-      this.pageList = [newRoute];
+      this.linkList = [newRoute.fullPath]
+      this.pageList = [newRoute]
     } else if (this.linkList.indexOf(newRoute.fullPath) < 0) {
-      this.linkList.push(newRoute.fullPath);
-      this.pageList.push(newRoute);
+      this.linkList.push(newRoute.fullPath)
+      this.pageList.push(newRoute)
     }
-  }
-  @Watch("activePage")
-  getactivePage(key: any) {
-    this.$router.push(key);
-  }
-  @Watch("multipage")
-  getmultipage(newVal: any, oldVal: any) {
-    if (!newVal) {
-      this.linkList = [this.$route.fullPath];
-      this.pageList = [this.$route];
-    }
-  }
-  created(): void {
-    if (this.$route.name == "/") {
-      return;
-    }
-    this.pageList.push(this.$route);
-    this.linkList.push(this.$route.fullPath);
-    this.activePage = this.$route.fullPath;
   }
 
-  changePage(key: any) {
-    this.activePage = key;
+  @Watch('activePage')
+  getactivePage(key: string):void {
+    this.$router.push(key)
   }
-  editPage(key: any, action: any) {
-    (this as any)[action](key);
+
+  @Watch('multipage')
+  // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+  getmultipage(newVal: any):void {
+    if (!newVal) {
+      this.linkList = [this.$route.fullPath]
+      this.pageList = [this.$route]
+    }
   }
-  remove(key: any) {
+
+  created(): void {
+    if (this.$route.name === '/') {
+      return
+    }
+    this.pageList.push(this.$route)
+    this.linkList.push(this.$route.fullPath)
+    this.activePage = this.$route.fullPath
+  }
+
+  changePage(key: any):void {
+    this.activePage = key
+  }
+
+  editPage(key: any, action: any):void {
+    (this as any)[action](key)
+  }
+
+  remove(key: any):void {
     if (this.pageList.length === 1) {
-      this.$router.push("/");
+      this.$router.push('/')
     }
-    this.pageList = this.pageList.filter(item => item.fullPath !== key);
-    let index = this.linkList.indexOf(key);
-    this.linkList = this.linkList.filter(item => item !== key);
-    index = index >= this.linkList.length ? this.linkList.length - 1 : index;
-    this.activePage = this.linkList[index];
+    this.pageList = this.pageList.filter(item => item.fullPath !== key)
+    let index = this.linkList.indexOf(key)
+    this.linkList = this.linkList.filter(item => item !== key)
+    index = index >= this.linkList.length ? this.linkList.length - 1 : index
+    this.activePage = this.linkList[index]
   }
-  onContextmenu(e: any) {
-    const pagekey = this.getPageKey(e.target);
+
+  onContextmenu(e: any):void {
+    const pagekey = this.getPageKey(e.target)
     if (pagekey !== null) {
-      e.preventDefault();
-      this.menuVisible = true;
+      e.preventDefault()
+      this.menuVisible = true
     }
   }
+
   /**
    * 由于ant-design-vue组件库的TabPane组件暂不支持自定义监听器，无法直接获取到右键target所在标签页的 pagekey 。故增加此方法用于
    * 查询右键target所在标签页的标识 pagekey ，以用于自定义右键菜单的事件处理。
@@ -102,59 +110,63 @@ export default class MainTab extends Vue {
    * @returns {String}
    */
   getPageKey(target?: any, depth?: any): any {
-    depth = depth || 0;
+    depth = depth || 0
     if (depth > 2) {
-      return null;
+      return null
     }
-    let pageKey = target.getAttribute("pagekey");
+    let pageKey = target.getAttribute('pagekey')
     pageKey =
       pageKey ||
       (target.previousElementSibling
-        ? target.previousElementSibling.getAttribute("pagekey")
-        : null);
+        ? target.previousElementSibling.getAttribute('pagekey')
+        : null)
     return (
       pageKey ||
       (target.firstElementChild
         ? this.getPageKey(target.firstElementChild, ++depth)
         : null)
-    );
+    )
   }
-  onMenuSelect(key: any, target: any) {
-    let pageKey = this.getPageKey(target);
+
+  onMenuSelect(key: any, target: any):void {
+    const pageKey = this.getPageKey(target)
     switch (key) {
-      case "1":
-        this.closeLeft(pageKey);
-        break;
-      case "2":
-        this.closeRight(pageKey);
-        break;
-      case "3":
-        this.closeOthers(pageKey);
-        break;
+      case '1':
+        this.closeLeft(pageKey)
+        break
+      case '2':
+        this.closeRight(pageKey)
+        break
+      case '3':
+        this.closeOthers(pageKey)
+        break
       default:
-        break;
+        break
     }
   }
-  closeOthers(pageKey: any) {
-    let index = this.linkList.indexOf(pageKey);
-    this.linkList = this.linkList.slice(index, index + 1);
-    this.pageList = this.pageList.slice(index, index + 1);
-    this.activePage = this.linkList[0];
+
+  closeOthers(pageKey: any):void {
+    const index = this.linkList.indexOf(pageKey)
+    this.linkList = this.linkList.slice(index, index + 1)
+    this.pageList = this.pageList.slice(index, index + 1)
+    this.activePage = this.linkList[0]
   }
-  closeLeft(pageKey: any) {
-    let index = this.linkList.indexOf(pageKey);
-    this.linkList = this.linkList.slice(index);
-    this.pageList = this.pageList.slice(index);
+
+  closeLeft(pageKey: any):void {
+    const index = this.linkList.indexOf(pageKey)
+    this.linkList = this.linkList.slice(index)
+    this.pageList = this.pageList.slice(index)
     if (this.linkList.indexOf(this.activePage) < 0) {
-      this.activePage = this.linkList[0];
+      this.activePage = this.linkList[0]
     }
   }
-  closeRight(pageKey: any) {
-    let index = this.linkList.indexOf(pageKey);
-    this.linkList = this.linkList.slice(0, index + 1);
-    this.pageList = this.pageList.slice(0, index + 1);
+
+  closeRight(pageKey: any):void {
+    const index = this.linkList.indexOf(pageKey)
+    this.linkList = this.linkList.slice(0, index + 1)
+    this.pageList = this.pageList.slice(0, index + 1)
     if (this.linkList.indexOf((this as any).activePage < 0)) {
-      this.activePage = this.linkList[this.linkList.length - 1];
+      this.activePage = this.linkList[this.linkList.length - 1]
     }
   }
 }
