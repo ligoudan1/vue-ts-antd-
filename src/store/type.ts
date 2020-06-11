@@ -7,5 +7,7 @@ export interface CommonState {
 }
 
 export interface SettingState {
-    multipage?: boolean
+    multipage?: boolean,
+    // 存储不需要keepalive的页面
+    includeView: any[]
 }

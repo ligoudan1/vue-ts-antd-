@@ -72,19 +72,24 @@ interface router extends Vue {
 export default class MainSider extends Vue {
   public menu: any[] = [];
 
-  get collapsed():any {
-    return this.$store.state.Common.collapsed
-  }
-
   created(): void {
     const index = (this as any).$router.options.routes.findIndex(
       (d: any) => d.path === '/'
     )
     this.menu = (this as any).$router.options.routes[index].children
+    console.log(this.menu)
+  }
+
+  handleOpen() {
+    console.log(111)
+  }
+
+  handleClose() {
+    console.log(111)
   }
 
   // 通过menuId与动态(菜单)路由进行匹配跳转至指定路由
-  gotoRouteHandle(name: string):any {
+  gotoRouteHandle(name: string): any {
     this.$router.push({ name })
   }
 }

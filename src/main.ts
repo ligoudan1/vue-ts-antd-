@@ -9,7 +9,7 @@ import 'element-ui/lib/theme-chalk/index.css' // 引入element-ui的css文件
 
 import filters from '@/filters' // 引入项目中的过滤器
 
-import '@/assets/scss/index.scss' // 引入全局scss样式
+import '@/style/index.scss' // 引入全局scss样式
 
 import '@/components' // 全局自动注册组件
 
@@ -21,7 +21,7 @@ Vue.config.productionTip = false
 
 // 加载项目中的过滤器
 for (const key in filters) {
-  Vue.filter(key, filters[key]);
+  Vue.filter(key, filters[key])
 }
 
 new Vue({

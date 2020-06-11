@@ -15,8 +15,8 @@ export function isExternal(path: any) {
  * @returns {Boolean}
  */
 export function validUsername(str: string) {
-  const valid_map = ['admin', 'editor']
-  return valid_map.indexOf(str.trim()) >= 0
+  const validMap = ['admin', 'editor']
+  return validMap.indexOf(str.trim()) >= 0
 }
 
 /**
@@ -60,7 +60,7 @@ export function validAlphabets(str: string) {
  * @returns {Boolean}
  */
 export function validEmail(email: string) {
-  const reg = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+  const reg = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
   return reg.test(email)
 }
 

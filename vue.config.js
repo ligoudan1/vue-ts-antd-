@@ -12,7 +12,7 @@ module.exports = {
   assetsDir: 'static',
   lintOnSave: process.env.NODE_ENV === 'development',
   // 关闭eslint
-  // lintOnSave: false,
+  lintOnSave: false,
   devServer: {
     // host:'localhost',
     port: 8099,

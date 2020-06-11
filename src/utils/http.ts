@@ -13,29 +13,29 @@ const http: any = axios.create({
 })
 
 // 正在请求的请求url数组
-let pending: string[] = [];
+let pending: string[] = []
 
 // 是否正在请求
-let isPending = (url: string) => pending.includes(url);
+const isPending = (url: string) => pending.includes(url)
 
 // 移除完成的请求
-let removePending = (url: string) => {
-  let index = pending.findIndex(item => item === url);
-  pending.splice(index, 1);
-};
+const removePending = (url: string) => {
+  const index = pending.findIndex(item => item === url)
+  pending.splice(index, 1)
+}
 
 /**
  * 请求拦截
  */
 http.interceptors.request.use((config: any) => {
   if (!config.headers.noIntercept && isPending(config.url)) {
-    //终止请求
+    // 终止请求
     console.log(config.url)
-    return Promise.reject(new Error('重复请求已被拦截!'));
+    return Promise.reject(new Error('重复请求已被拦截!'))
   }
 
-  pending.push(config.url);
-  config.headers['token'] = 'token' // 请求头带上token
+  pending.push(config.url)
+  config.headers.token = 'token' // 请求头带上token
   return config
 }, (error: any) => {
   return Promise.reject(error)
@@ -45,7 +45,7 @@ http.interceptors.request.use((config: any) => {
  * 响应拦截
  */
 http.interceptors.response.use((response: any) => {
-  removePending(response.config.url);
+  removePending(response.config.url)
   if (response.data && response.data.code === 401) { // 401, token失效
     // 这里做清除登录的操作
 
@@ -53,7 +53,7 @@ http.interceptors.response.use((response: any) => {
   }
   return response
 }, (error: any) => {
-  pending = [];
+  pending = []
   return Promise.reject(error)
 })
 
@@ -72,8 +72,8 @@ http.adornUrl = (actionName: string) => {
  * @param {*} openDefultParams 是否开启默认参数?
  */
 http.adornParams = (params = {}, openDefultParams = true) => {
-  var defaults = {
-    't': new Date().getTime()
+  let defaults = {
+    t: new Date().getTime()
   }
   return openDefultParams ? merge(defaults, params) : params
 }
@@ -87,11 +87,11 @@ http.adornParams = (params = {}, openDefultParams = true) => {
  *  form: 'application/x-www-form-urlencoded; charset=utf-8'
  */
 http.adornData = (data = {}, openDefultdata = true, contentType = 'json') => {
-  var defaults = {
-    't': new Date().getTime()
+  let defaults = {
+    t: new Date().getTime()
   }
   data = openDefultdata ? merge(defaults, data) : data
   return contentType === 'json' ? JSON.stringify(data) : qs.stringify(data)
 }
 
-export default http;
+export default http
