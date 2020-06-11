@@ -35,12 +35,22 @@ import SidebarItem from "./SidebarItem.vue";
 export default class IndexSiderBar extends Vue {
   menu!: any[];
   created(): void {
-    const reg: any = new RegExp(/^\/.*?\//);
-    let routerStr = reg.exec(this.$route.path)[0];
-    routerStr = routerStr.substr(0, routerStr.length - 1);
-    const index: number = (this as any).$router.options.routes.findIndex(
+    console.log(this.$route.path);
+    let index: any = undefined;
+    let routerStr: any;
+    index = (this as any).$router.options.routes.findIndex(
       (d: any) => d.path === "/"
     );
+    if (toString.call(this.$route.path) === "[object String]") {
+      // 如果为string类型,证明不在总目录下
+      routerStr = this.$route.path;
+    } else {
+      const reg: any = new RegExp(/^\/.*?\//);
+      routerStr = reg
+        .exec(this.$route.path)[0]
+        .substr(0, reg.exec(this.$route.path)[0].length - 1);
+    }
+
     let routeIndex: number = (this as any).$router.options.routes[
       index
     ].children.findIndex((d: any) => d.path === routerStr);

@@ -32,7 +32,15 @@ export const MainRouter: Array<any> = [
         icon: 'none'
       },
       test1
-    ]
+    ],
+    beforeEnter: (to: any, from: any, next: any) => {
+      let token: string | null = localStorage.getItem('token');
+      if (token) {
+        next()
+      } else {
+        next({ path: '/login' })
+      }
+    }
   }
 ]
 
